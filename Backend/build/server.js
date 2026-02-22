@@ -7,6 +7,8 @@ const app_1 = __importDefault(require("./app"));
 const wistonLogger_1 = __importDefault(require("./loggers/wistonLogger"));
 const config_1 = require("./utils/config/config");
 const db_1 = require("./db/db");
+const getCollection_1 = require("./db/getCollection");
+const collectionSchema_1 = require("./db/collectionSchema");
 const PORT = config_1.config.port;
 let server;
 // Handle uncaught exceptions
@@ -19,11 +21,18 @@ process.on("unhandledRejection", (reason, promise) => {
     wistonLogger_1.default.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
     process.exit(1);
 });
-// connect to database
-(0, db_1.connectDB)();
 // Start  Server Properly 
 const startServer = async () => {
     try {
+        // console.log("PORT VALUE:", PORT);
+        // connect to database
+        await (0, db_1.connectDB)();
+        // create index
+        const userColl = await (0, getCollection_1.getCollection)(collectionSchema_1.ECollectionName.USERS, collectionSchema_1.EDBName.BANK);
+        await userColl.createIndex({ email: 1 }, { unique: true });
+        await userColl.createIndex({ username: 1 }, { unique: true });
+        wistonLogger_1.default.info("User indexes ensured");
+        //  Start server
         server = app_1.default.listen(PORT, () => {
             wistonLogger_1.default.info(`Server is running on http://localhost:${PORT}`);
             wistonLogger_1.default.debug(`Environment: ${config_1.config.nodeEnv}`);
