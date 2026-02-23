@@ -1,7 +1,7 @@
 
 export enum ECollectionName {
     USERS = "users",
-
+    ACCOUNTS = "accounts",
 }
 
 

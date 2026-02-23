@@ -5,6 +5,7 @@ import { connectDB, closeDB } from './db/db'
 import { getCollection } from "./db/getCollection";
 import { IUser } from "./features/auth/userModel";
 import { ECollectionName, EDBName } from "./db/collectionSchema";
+import { ensureIndexes } from "./db/indexes";
 
 const PORT = config.port;
 
@@ -31,15 +32,7 @@ const startServer = async () => {
         await connectDB();
 
         // create index
-        const userColl = await getCollection<IUser>(
-            ECollectionName.USERS,
-            EDBName.BANK
-        )
-
-        await userColl.createIndex({ email: 1 }, { unique: true });
-        await userColl.createIndex({ username: 1 }, { unique: true });
-
-        logger.info("User indexes ensured");
+        await ensureIndexes();
 
         //  Start server
         server = app.listen(PORT, () => {

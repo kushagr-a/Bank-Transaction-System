@@ -88,7 +88,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
         // generate token
         const token = await genrateToken({
-            userId: result.insertedId,
+            userId: result.insertedId.toString()
         })
 
         // set cookie
@@ -102,14 +102,9 @@ export const registerUser = async (req: Request, res: Response) => {
         // remove password safely
         const { password: _password, ...safeUser } = newUser
 
-        // Send email in background (don't await)
-        await sendRegistrationEmail(newUser.email, newUser.name)
-            .catch((err) => {
-                logger.error("Email sending failed: " + err.message)
-            })
 
         // return response
-        return res.status(201).json({
+        res.status(201).json({
             success: true,
             message: "User registered successfully",
             data: {
@@ -119,6 +114,11 @@ export const registerUser = async (req: Request, res: Response) => {
             }
         })
 
+        // Send email in background (don't await)
+        await sendRegistrationEmail(newUser.email, newUser.name)
+            .catch((err) => {
+                logger.error("Email sending failed: " + err.message)
+            })
 
 
     } catch (error: any) {
@@ -219,6 +219,25 @@ export const loginUser = async (req: Request, res: Response) => {
 
     } catch (error: any) {
         logger.error(`Error in loginUser: ${error.message}`)
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+export const logoutUser = async (req: Request, res: Response) => {
+    try {
+        // clear cookie
+        res.clearCookie("token")
+
+        // return response
+        return res.status(200).json({
+            success: true,
+            message: "User logged out successfully"
+        })
+    } catch (error: any) {
+        logger.error(`Error in logoutUser: ${error.message}`)
         return res.status(500).json({
             success: false,
             message: "Internal server error"

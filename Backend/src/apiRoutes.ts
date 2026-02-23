@@ -1,9 +1,13 @@
-    import { Router } from "express";
-    import userRouter from "./features/auth/userRoutes";
+import { Router } from "express";
+import userRouter from "./features/auth/userRoutes";
+import accountRouter from "./features/account/accountRoutes";
 
-    const apiRoutes = Router();
+const apiRoutes = Router();
 
-    //  Auth controller
-    apiRoutes.use("/auth", userRouter)
+//  Auth controller
+apiRoutes.use("/auth", userRouter)
 
-    export default apiRoutes;
+//  Account controller
+apiRoutes.use("/account", accountRouter)
+
+export default apiRoutes;
