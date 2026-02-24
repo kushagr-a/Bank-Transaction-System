@@ -2,11 +2,11 @@ import { ObjectId } from "mongodb";
 
 export interface IAccount {
     userId: ObjectId;
-    accountNumber: EAccountType;
-    accountType: string;
+    accountNumber: string;
+    accountType: EAccountType;
     balance: number;
     status: EAccountStatus;
-    currency: ECurrency; 
+    currency: ECurrency;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -1,8 +1,10 @@
 import { Router } from "express";
+import { createAccount } from "./accountController";
+import { verifyJwt } from "../auth/verifyCrlt";
 
 const accountRouter = Router();
 
-accountRouter.route("/").post()
+accountRouter.route("/createAccount").post(verifyJwt, createAccount)
 
 accountRouter.route("/").get()
 
