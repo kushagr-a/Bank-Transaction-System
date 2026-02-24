@@ -2,6 +2,8 @@
 export enum ECollectionName {
     USERS = "users",
     ACCOUNTS = "accounts",
+    TRANSACTIONS = "transactions",
+    LEDGER = "ledger",
 }
 
 

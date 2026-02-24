@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export interface IAccount {
+    _id?: ObjectId;
     userId: ObjectId;
     accountNumber: string;
     accountType: EAccountType;
